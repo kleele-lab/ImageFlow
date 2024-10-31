@@ -1,0 +1,72 @@
+{
+    "input_path": "/nfs/nas22/fs2202/biol_bc_kleele_2/Avery/Practice_data/raw_data",
+    "ilastik_application_path": "/cluster/home/agosselin/Applications/ilastik-1.4.0.post1-Linux/run_ilastik.sh",
+    "cell_profiler_application_path": "",
+    "fiji_application_path": "../Applications/Fiji.app/ImageJ-linux64",
+    "input_channels": {
+        "mCherry": "561TMRE",
+        "GFP": "488SybrGold",
+        "Cy5": "640PKMO"
+    },
+    "example_params": {
+        "separateChannels": {
+            "params":{
+                "skip": "True or False -> set to true if you want to skip this step in your pipeline. Set false or remove entirely to run this step"
+            }
+        },
+        "runIlastikClassifiers": {
+            "params":  {
+                "skip": "True or False -> set to true if you want to skip this step in your pipeline. Set false or remove entirely to run this step",
+                "classifiers": [
+                    "this can be left empty, removed completely, or have a list of the classifiers you want to use in the format:",
+                    "classifier_1.ilp",
+                    "classifier_2.ilp"
+                ],
+                "": "MAKE SURE PEOPLE KNOW THE IMPLICATIONS THese HAve, SETS NAMES FOR ALL EXPORTS, REMOVE",
+                "--export_source": "probabilities",
+                "--output_format": "tiff sequence",
+                "--output_filename_format": "{nickname}_{slice_index}_{result_type}.tiff",
+                "--output_internal_path": null,
+                "--cutout_subregion": null,
+                "--export_dtype": null,
+                "--output_axis_order": null,
+                "--pipeline_result_drange": null,
+                "--export_drange": null
+            }
+         },
+         "runCellProfilerPipelines": {
+            "params": {
+                "resources": ""
+            }
+         }
+    },
+
+    "pipeline_good": {
+        "separateChannels": {
+            "params": {
+                "skip": false
+            }
+        },
+        "runIlastikClassifiers": {
+            "params":  {
+                "skip": false
+            }
+         }
+    },
+
+    "pipeline": {
+        "runCellProfilerPipelines": {
+            "params": {
+                "projects": [
+                    "test_project.cppipe"
+                ]
+            }
+        }
+    },
+    "pipeline_cp": {
+        "runFijiMacros": {
+            "params": {}
+        }
+    }
+
+}

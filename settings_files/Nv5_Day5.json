@@ -1,0 +1,38 @@
+{
+    "input_path": "/nfs/nas22/fs2202/biol_bc_kleele_2/Avery/Analyses/Automated_Analysis_V2/Nv5/Day5_MIP",
+    "output_path": "/nfs/nas22/fs2202/biol_bc_kleele_2/Avery/Analyses/Automated_Analysis_V2/Nv5/Day5_MIP/pipeline_outputs",
+
+    "ilastik_application_path": "/cluster/home/agosselin/Applications/ilastik-1.4.0.post1-Linux/run_ilastik.sh",
+    "ilastik_classifiers_path": "/nfs/nas22/fs2202/biol_bc_kleele_2/Avery/Analyses/Automated_Analysis_V2/Toolbox/ilastik_classifiers",
+
+    "cell_profiler_application_path": "/usr/bin/singularity run ~/Singularity/CellProfiler cellprofiler",
+    "cell_profiler_pipelines_path": "/nfs/nas22/fs2202/biol_bc_kleele_2/Avery/Analyses/Automated_Analysis_V2/Toolbox/cell_profiler_pipelines",
+
+    "input_channels": {
+        "GFP": "488SYBR",
+        "mCherry": "561-TMRE",
+        "Cy5": "640-PKMO"
+    },
+    "pipeline": {
+        "separateChannels": {
+            "params": {
+                "skip": false
+            }
+        },
+        "runIlastikClassifier": {
+            "params": {
+                "skip": false,
+                "--export_source": "simple segmentation",
+                "--output_format": "png"
+            }
+        },
+        "runCellProfilerPipeline": {
+            "params": {
+                "skip": false,
+                "pipelines": [
+                    "241030_ThreeChannels_PKMO-TMRE-SYBR_Nv3_Day2-5_BinMasks_V2.cppipe"
+                ]
+            }
+        }
+    }   
+}
