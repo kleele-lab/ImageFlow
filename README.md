@@ -1,6 +1,6 @@
 # Kleele Lab Rotation Analysis Pipeline Tool
 
-## will have an abstract here (requested by michael)
+## will have an abstract here
 
 ## Description
 This toolkit tries to make it easier to connect different biological analysis tools to automate your pipelines! It currently doesn't support too much, however, it can run:
