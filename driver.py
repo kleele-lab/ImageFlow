@@ -60,9 +60,6 @@ def runIlastikClassifier(input_path, prev_output_path, output_path, params=None)
 
     # Ilastik classification assumes the previous step will generate the data it takes
     #   Possible bug here if ilastik classification is the first step in the pipeline...
-    #allData = os.listdir(prev_output_path)
-    #print("All data is: ", allData)
-
     allData = [os.path.join(root, name)
              for root, dirs, files in os.walk(prev_output_path)
              for name in files

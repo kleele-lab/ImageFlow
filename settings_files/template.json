@@ -1,0 +1,16 @@
+{
+    "input_path": "",
+    "output_path": "",
+
+    "ilastik_application_path": "",
+    "ilastik_classifiers_path": "",
+
+    "cell_profiler_application_path": "",
+    "cell_profiler_pipelines_path": "",
+
+    "fiji_application_path": "",
+    "fiji_macros_path": "",
+
+    "input_channels": {},
+    "pipeline": {}   
+}
