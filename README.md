@@ -9,11 +9,11 @@ The resources of the Kleele lab enable reseachers to develop informationally den
     1. [Local device](#local-installation)
     2. [On Euler](#euler-installation)
 3. [Building a sample pipeline](#sample-instructions)
-    0. [Prerequisites](#instructions-prerequisites)
-    1. [Configuring the Settings File](#instructions-settings)
-    2. [Configuring the Run Script](#instructions-runscript)
-    3. [Run your pipeline!](#instructions-run)
-4. Troubleshooting
+    1. [Prerequisites](#instructions-prerequisites)
+    2. [Configuring the Settings File](#instructions-settings)
+    3. [Configuring the Run Script](#instructions-runscript)
+    4. [Run your pipeline!](#instructions-run)
+4. [Troubleshooting](#troubleshooting)
 
 
 ## <a id="the-basics"></a> Understanding the basics
@@ -46,14 +46,14 @@ When setting up on Euler you will need to:
 ## <a id="sample-instructions"></a> Building and Running a Sample Pipeline
 This section will describe the high-level process of setting up and running a pipeline that segments multi-channel TIF images using Ilastik and Cell Profiler. More detailed descriptions of some of these steps can be found in the `guides` folder.
 
-0. <a id="instructions-prerequisites"></a>Prerequisites, this guide assumes you:
+1. <a id="instructions-prerequisites"></a>Prerequisites, this guide assumes you:
     - Cloned the project code to your local device or the Euler
     - Downloaded Ilastik and Cell Profiler (see guides/Application Installation Guide)
     - Have a trained Ilastik pixel classifier relevant to your dataset (see guides/Training an Ilastik Pixel Classifier)
     - Have a Cell Profiler Pipeline relevant to your dataset (see guides/Building a Cell Profiler Pipeline)
     - Have at least one multi-channel TIF(F) image to run your pipeline on
 
-1. <a id="instructions-settings"></a>Configuring the Settings File
+2. <a id="instructions-settings"></a>Configuring the Settings File
     1. Duplicate template.json in the settings-files directory.<br>
     Name it whatever you want, we will refer to it as `example.json` from here on. Additional details about the settings file can be found at `guides/The Settings File`
 
@@ -112,7 +112,7 @@ This section will describe the high-level process of setting up and running a pi
         ```
     Our settings file is now fully configured!
 
-2. <a id="instructions-runscript"></a>Configuring the Run Script<br>
+3. <a id="instructions-runscript"></a>Configuring the Run Script<br>
 The script(s) are the`.sh` files included in this repository. These are what actually drive the running of our code, and which one you use will depend on if you use a local device (your desktop or personal computer) or the Euler (we have provided scripts for both). Regardless of which you use, in each you will see a block near the top that looks like:
     ```
     # SET THIS VALUE TO THE PIPELINE YOU WANT TO RUN
@@ -121,7 +121,7 @@ The script(s) are the`.sh` files included in this repository. These are what act
     ```
     Here, you must set the line beginning with `settings_file` equal to the path to your `example.json` file.
 
-3. <a id="instructions-run"></a>Run your pipeline!<br>
+4. <a id="instructions-run"></a>Run your pipeline!<br>
 Finally, you are ready to run your pipeline! I highly recommend starting with a small dataset of one or a few images with your first attempt, in case anything is misconfigured. Once you confirm that everything is coming out how you expected you can modify any of these settings to point the pipeline at new datasets and/or tools and start automatically processing your data!<br>
     - To run your program locally go to the directory with your run script and enter the command `./local-run.sh`
     - To run your program on the Euler go to the directory with your run script and enter the command `sbatch euler-run.sh`. PLEASE NOTE if your dataset is in the Kleele 2 server, due to the access rules of the server you should instead go to the directory you defined in the input_path setting and execute the script with `sbatch ABSOLUTE_PATH_TO_RUN_SCRIPT/euler-run.sh`
@@ -130,3 +130,5 @@ Finally, you are ready to run your pipeline! I highly recommend starting with a 
 
 
 
+
+## <a id="troubleshooting"></a> Troubleshooting
