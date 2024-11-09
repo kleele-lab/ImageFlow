@@ -12,6 +12,7 @@
     "fiji_macros_path": "",
 
     "input_channels": {},
+    
     "pipeline": {
         "step_name": {
             "params": {
