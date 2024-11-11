@@ -14,7 +14,7 @@ This project tries to channel data between pre-existing analysis applications, s
     2. [Configuring the Settings File](#instructions-settings)
     3. [Configuring the Run Script](#instructions-runscript)
     4. [Run your pipeline!](#instructions-run)
-3. [Troubleshooting](#troubleshooting)
+3. [Known Shortcomings](#toimprove)
 
 
 ## <a id="installation"></a> Installation and Setup
@@ -42,7 +42,7 @@ This section describes the process of setting up and running a pipeline to segme
 
 1. <a id="instructions-prerequisites"></a>Prerequisites, this guide assumes you:
     - Cloned the project code to your local device or the Euler
-    - Downloaded Ilastik and Cell Profiler (see *Euler Application Install Guide* if using Euler for reference)
+    - Downloaded Ilastik and Cell Profiler (see *Euler Application Install Guide* for reference if using Euler)
     - Have a trained Ilastik pixel classifier (see *Ilastik - Building a Pixel Classifier* for reference)
     - Have a Cell Profiler pipeline (see *Building a Cell Profiler Pipeline* for reference)
     - Have at least one multi-channel TIF(F) image to run your pipeline on
@@ -161,8 +161,10 @@ Finally, you are ready to run your pipeline! I recommend starting with a small d
         ```
 
 
+## <a id="toimprove"></a> Known Shortcomings
 
-
-
-
-## <a id="troubleshooting"></a> Troubleshooting
+While we were able to get a pipeline working to quantify neuronal mitochondria, there is absolutely still more work that needs to be done to make this tool more versatile to be acceptable for everyday use in the lab. This section lists some known shortcomings with the tool in the hope that it may be improved in the future.
+- <strong>The output folder needs to be a subfolder of the input folder</strong>. This should be changed so people can put their output wherever they want, however, the system can't handle this yet when steps in a pipeline depend on previous step(s)
+The way different pipeline steps handle input folders is hardcoded differently and should be improved. For example, some steps take the output of the previous step as input (runIlastikClassifier), while others take just the root input (runCellProfilerPipeline). If a pipeline were to be Ilastik -> CP with an output folder not a subfolder of the input folder, Cell Profiler would have no access to the Ilastik output.
+- <strong>The channel naming scheme in the settings is confusing</strong>. Somehow the user needs to tell the system the channels of their multichannel images so it can use this to identify them uniquely if separated. The current method, while functional, seems confusing and very prone to user error.
+- <strong>The flag options for headless running are implemented in Ilastik but not CP or Fiji</strong>. Because we got Ilastik working much sooner, the flag system is much more developed. This could be extended to work with CP/Fiji, however, we didn't have time to test this so it has not been done
