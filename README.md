@@ -44,7 +44,7 @@ This section describes the process of setting up and running a pipeline to segme
     - Cloned the project code to your local device or the Euler
     - Downloaded Ilastik and Cell Profiler (see *Euler Application Install Guide* for reference if using Euler)
     - Have a trained Ilastik pixel classifier (see *Ilastik - Building a Pixel Classifier* for reference)
-    - Have a Cell Profiler pipeline (see *Building a Cell Profiler Pipeline* for reference)
+    - Have a Cell Profiler pipeline (see *Cell Profiler – Making a Basic Segmentation Project and Exporting a Pipeline* for reference)
     - Have at least one multi-channel TIF(F) image to run your pipeline on
 
 2. <a id="instructions-settings"></a>Configuring the Settings File
