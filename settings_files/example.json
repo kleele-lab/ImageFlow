@@ -1,0 +1,30 @@
+{
+    "input_path": "path/to/input/image/folder",
+    "output_path": "path/to/input/image/folder/output",
+
+    "ilastik_application_path": "path/to/Ilastik/run_ilastik.sh",
+    "ilastik_classifiers_path": "path/to/ilastik/classifiers",
+
+    "cell_profiler_application_path": "path/to/Cell_Profiler/cp",
+    "cell_profiler_pipelines_path": "path/to/cell_profiler/pipelines",
+
+    "input_channels": {"mCherry": "561TMRE", "Cy5": "640PKMO"},
+
+    "pipeline": {
+        "separateChannels": {
+            "params": {
+                "skip": false
+            }
+        },
+        "runIlastikClassifier": {
+            "params": {
+                "skip": false
+            }
+        },
+        "runCellProfilerPipeline": {
+            "params": {
+                "skip": false
+            }
+        }
+    }
+}
