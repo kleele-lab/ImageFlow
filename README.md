@@ -133,7 +133,7 @@ This section describes the process of setting up and running a pipeline to segme
             }
         }
         ```
-    7. (Optional) Validate your settings with a JSON validation like [JSON Lint](https://jsonlint.com/).
+    7. (Optional) Validate your settings with a JSON validation like <a href="https://jsonlint.com/" target="_blank">JSON Lint</a>.
     These JSON validators will parse through your JSON and make sure everything is formatted correctly, and are very useful when trying to find bugs!
 
 3. <a id="instructions-runscript"></a>Configuring the Run Script<br>
