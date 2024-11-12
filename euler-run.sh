@@ -1,15 +1,9 @@
 #!/bin/bash
 
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
-#SBATCH --time=4:00:00
-#SBATCH --job-name="pipeline"
-#SBATCH --mem-per-cpu=1024
-
-
-# SET THIS VALUE TO THE PIPELINE YOU WANT TO RUN
+# PASS THIS VALUE AS AN ARGUMENT WHEN RUNNING THIS SCRIPT
 # See settings_files/example.json for a basic pipeline. 
-settings_file=~/code/settings_files/example.json
+echo "Attempting to set settings file to: " $1
+settings_file=$1
 
 
 # Configures the necessary modules, if your pipeline needs any additional modules add them below.

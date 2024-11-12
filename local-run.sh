@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# SET THIS VALUE TO THE PIPELINE YOU WANT TO RUN
+# PASS THIS VALUE AS AN ARGUMENT WHEN RUNNING THIS SCRIPT
 # See settings_files/example.json for a basic pipeline. 
-settings_file=~/code/settings_files/example.json
+echo "Attempting to set settings file to: " $1
+settings_file=$1
 
 
 # Prevents the creation of hidden files that break things, this is particularly an issue when running on Macs so remove at your own risk.
