@@ -20,11 +20,9 @@ def build_ilastik_command(ilastik_path, ilastik_classifier_path, input_data, out
                 else:
                     command += format_flag(param, params[param])
     
-    """ I needed this to get things to work with some Ilastik classifiers, but should default to export settings generally...
     #! this part is tricky, setting here isn't ideal but is still sometimes necessary...
     if " --output_filename_format" not in command:
-        command += " --output_filename_format=" + output_path + "/" + "{nickname}_{result_type}.png
-    """
+        command += " --output_filename_format=" + output_path + "/" + "{nickname}_{result_type}.png"
     
     for data in input_data:
         print(data)
