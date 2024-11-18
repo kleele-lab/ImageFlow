@@ -12,8 +12,7 @@ This project tries to channel data between pre-existing analysis applications, s
 2. [Configure a Sample Pipeline](#sample-instructions)
     1. [Prerequisites](#instructions-prerequisites)
     2. [Configuring the Settings File](#instructions-settings)
-    3. [Configuring the Run Script](#instructions-runscript)
-    4. [Run your pipeline!](#instructions-run)
+    3. [Run your pipeline!](#instructions-run)
 3. [Known Shortcomings](#toimprove)
 
 
@@ -136,30 +135,29 @@ This section describes the process of setting up and running a pipeline to segme
     7. (Optional) Validate your settings with a JSON validation like <a href="https://jsonlint.com/" target="_blank">JSON Lint</a>.
     These JSON validators will parse through your JSON and make sure everything is formatted correctly, and are very useful when trying to find bugs!
 
-3. <a id="instructions-runscript"></a>Configuring the Run Script<br>
-The script(s) are the `.sh` files included in this repository. These are what actually drive our code, and which one you use depends on if you use a local device (your desktop or personal computer) or the Euler (we have provided scripts for both). Regardless of which you use, in each you will see a block near the top that looks like:
-    ```bash
-    # SET THIS VALUE TO THE PIPELINE YOU WANT TO RUN
-    # See settings_files/example.json for a basic pipeline. 
-    settings_file=~/code/settings_files/example.json
-    ```
-    Here, you must set the line beginning with `settings_file` equal to the path to your `example.json` file.
-
-4. <a id="instructions-run"></a>Run your pipeline!<br>
+3. <a id="instructions-run"></a>Run your pipeline!<br>
 Finally, you are ready to run your pipeline! I recommend starting with a small dataset of one or a few images with your first attempt to ensure things run properly. Once you confirm that everything is coming out how you expected you can point the pipeline at new datasets and start automatically processing your data!<br>
     - To run your program locally go to the directory with your run script and enter the command:
         ```
-        ./local-run.sh
+        local-run.sh /path/to/settings_file.json
         ```
+        The components of this command are:
+        - `local-run.sh`: our job run script.
+        - `/path/to/settings_file.json`: the absolute path to the settings file you want to use for this run.
+
     - To run your program on the Euler go to the directory with your run script and enter the command 
         ```
-        sbatch euler-run.sh
+        sbatch --ntasks=1 --cpus-per-task=8 --time=4:00:00 --job-name=pipeline --mem-per-cpu=1024 euler-run.sh /path/to/settings_file.json
         ``` 
-        <strong>PLEASE NOTE</strong> if your dataset is in the Kleele 2 server, due to the access rules of the server you should instead go to the directory you defined in the input_path setting and execute the script with:
-        ```
-        sbatch ABSOLUTE_PATH_TO_RUN_SCRIPT/euler-run.sh
-        ```
-
+        The components of this command are:
+        - `sbatch`: sends this command to Euler's sbatch system, don't change this
+        - `--ntasks`: defines the number of tasks to run. We set it to run but your use case may require more.
+        - `--cpus-per-task`: the number of CPUs dedicated to each task. Increase this for more expensive processes.
+        - `--time`: the maximum time your script is allowed to run for before cancelling
+        - `--job-name`: the name of the job. Adding an identifiable name to each job can make it easier to manipulate them later when multiple are running
+        - `--mem-per-cpu`: the amount of memory per CPU, in MB.
+        - `euler-run.sh`: our euler run script.
+        - `/path/to/settings_file.json`: the absolute path to the settings file you want to use for this run.
 
 ## <a id="toimprove"></a> Known Shortcomings
 
