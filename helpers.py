@@ -44,13 +44,22 @@ def build_cellprofiler_command(cell_profiler_application_path, path_to_pipeline,
     return(command)
 
 
-#! finish this
+#! This implementation has been barely tested, needs more work.
+# Returns an executable bash command for running a given Fiji project on a given dataset.
+#   @ fiji_path: path to executable fiji. Defined in settings file at fiji_application_path
+#   @ path_to_macro: path to the premade macro to use
+#   @ input_path: the directory or file that will act as input data
+#   @ output_path: the directory to place any output in
+#   @ params: a dictionary of optional commands
 def build_fiji_command(fiji_path, path_to_macro, input_path, output_path, params=None):
     command = fiji_path + " --headless --console -macro " + path_to_macro
     command += " '"  + "folder=" + input_path + " parameters=a.properties" + " output=" + output_path + "'"
     return(command)
 
 
+# Gets files in a directory that are not hidden junk files. Intended to be used for getting just project files from a given directory, can also be used to take just a subset of projects.
+#   @ directory: path to directory to search
+#   @ project_list: an optional list of file names to specifically return, otherwise gets all possible project files
 def getProjects(directory, project_list=None):
     whole_directory = os.listdir(directory)
     just_projects = clean_file_list(whole_directory, "._")
@@ -67,7 +76,6 @@ def getProjects(directory, project_list=None):
 
 
 # Method to remove given channels from a file name (for accurate names that reflect what channels are present in segmented images)
-# TODO: get rid of to_keep and just make sure to not give values you dont want to remove
 #   @file_name: the original name of the file to edit
 #   @to_remove: a dictionary of values to remove
 #   @to_keep: defaults to none, a string value you want to save from the toREmove values

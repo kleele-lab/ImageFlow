@@ -1,13 +1,170 @@
-# Kleele Lab Rotation Analysis Pipeline Tool
+# ImageFlow: automate your segmentation
 
-## will have an abstract here
+## Introduction
+The resources of the Kleele lab enable reseachers to develop informationally dense and large scale data sets. While this can be very useful in gaining new insights, it also means that working with this data can present a major hurdle, and optimizing their methods for analyzing these large datasets could serve to benefit the lab's efficiency and reproducability. In this project, we sought to address a small subset of this challenge by developing a custom toolkit that aims to allow members of the lab to combine easily used, well supported, biological image analysis tools into automated analysis pipelines. In this work, we specifically focused on automating quantification of multichannel mitochondrial images, converting images from the microscope into datasets with a push of a button.
 
-## Description
-This toolkit tries to make it easier to connect different biological analysis tools to automate your pipelines! It currently doesn't support too much, however, it can run:
-- Channel separation (slice a multi channel image into separate images)
-- Ilastik Pixel Classifiers (generate probability maps or segmentations using trained Ilastik classifiers)
-- Cell Profiler pipelines ()
-- [in progress] Fiji Macros
+This project tries to channel data between pre-existing analysis applications, specifically, Ilastik and Cell Profiler as well as some very experimental Fiji support. While our script does have some simple processing abilities (such as separating TIFF image channels), the vast majority of the lifting is left to tools made within other applications. As an analogy, one could view our code as a conveyer belt connecting machines in a factory, where the output of each step will be fed into the next until we arrive at the final product.
 
-Warnings:
-- Code must be run from inside the Kleele 2 server in a directory that has access to all of your resources
+## Index
+1. [Installation and setup](#installation)
+    1. [Local Setup](#local-installation)
+    2. [Euler Setup](#euler-installation)
+2. [Configure a Sample Pipeline](#sample-instructions)
+    1. [Prerequisites](#instructions-prerequisites)
+    2. [Configuring the Settings File](#instructions-settings)
+    3. [Run your pipeline!](#instructions-run)
+3. [Known Shortcomings](#toimprove)
+
+
+## <a id="installation"></a> Installation and Setup
+Firstly, this project depends on:
+- Python 3.9.18
+- tifffile 2024.9.20
+
+To begin both the local and Euler setup processes you should first clone this repository to a directory you will be able to easily find it later. 
+
+### <a id="local-installation"></a> Local Setup
+When setting up locally you will need to:
+- Clone this repository to your local machine
+- Install each of the program's dependencies
+- Download the applications your pipeline will use (for example, Ilastik and Cell Profiler).
+- Ensure you have access to your dataset from whatever directory you will execute your program in
+
+### <a id="euler-installation"></a> Euler Setup
+When setting up on Euler you will need to:
+- Clone this repository to your Euler login node (see Euler instructions for information on how to get set up)
+- Download whatever applications your pipeline will use (for example, Ilastik and Cell Profiler). See *Euler Application Install Guide* for instructions
+
+
+## <a id="sample-instructions"></a> Configure a Sample Pipeline
+This section describes the process of setting up and running a pipeline to segment multi-channel TIFF images using Ilastik and Cell Profiler. More detailed descriptions of some of these steps can be found in the `guides` folder.
+
+1. <a id="instructions-prerequisites"></a>Prerequisites, this guide assumes you:
+    - Cloned the project code to your local device or the Euler
+    - Downloaded Ilastik and Cell Profiler (see *Euler Application Install Guide* for reference if using Euler)
+    - Have a trained Ilastik pixel classifier (see *Ilastik - Building a Pixel Classifier* for reference)
+    - Have a Cell Profiler pipeline (see *Cell Profiler – Making a Basic Segmentation Project and Exporting a Pipeline* for reference)
+    - Have at least one multi-channel TIF(F) image to run your pipeline on
+
+2. <a id="instructions-settings"></a>Configuring the Settings File
+    1. Duplicate template.json in the settings-files directory.<br>
+    Name it whatever you want, we will refer to it as `example.json` from here on. Additional details about the settings file can be found in *The Settings File* in the guides folder.
+    2. In `example.json` set input_path and output_path.
+        ```json 
+        "input_path": "path/to/input/image/folder",
+        "output_path": "path/to/input/image/folder/output",
+        ```
+    3. In `example.json` set ilastik_application_path and ilastik_classifiers_path.
+        ```json
+        "ilastik_application_path": "path/to/Ilastik/run_ilastik.sh",
+        "ilastik_classifiers_path": "path/to/ilastik/classifiers",
+        ```
+    4. In `example.json` set cell_profiler_application_path and cell_profiler_pipelines_path.
+        ```json
+        "cell_profiler_application_path": "path/to/Cell_Profiler/cp", (different on Euler)
+        "cell_profiler_pipelines_path": "path/to/cell_profiler/pipelines",
+        ```
+    5. In `example.json` set the input_channels setting to describe your image's channels. This step is a bit confusing, *The Settings File* guide describes this step in detail.
+        ```json
+        "input_channels": {"mCherry": "561TMRE", "Cy5": "640PKMO"},
+        ```
+    6. In `example.json` set the pipeline setting to the structure of pipeline you want to run.<br>
+    Each pipeline step follows the repeated structure:
+        ```json
+        "step_name": {
+            "params": {
+                "skip": true | false (defaults to false)
+            }
+        }
+        ```
+        The step_name value is all we need to change for now, although more advanced settings are possible. For our three step pathway we will copy this basic structure three times and run the methods `separateChannels` -> `runIlastikClassifier` -> `runCellProfilerPipeline`, each of which correspond to their method name in the system code. The current structure of the code does not allow a ton of flexibility, so, unfortunately while this structure is likely not the only configuration it is capable of, it is the only one that has been tested much.<br>
+
+        Finally, our pipeline setting should be:
+        ```json
+        "pipeline": {
+            "separateChannels": {
+                "params": {
+                    "skip": false
+                }
+            },
+            "runIlastikClassifier": {
+                "params": {
+                    "skip": false
+                }
+            },
+            "runCellProfilerPipeline": {
+                "params": {
+                    "skip": false
+                }
+            }
+        }
+        ```
+        Our settings file is now fully configured, and should look something like this:
+        ```json 
+        {
+            "input_path": "path/to/input/image/folder",
+            "output_path": "path/to/input/image/folder/output",
+
+            "ilastik_application_path": "path/to/Ilastik/run_ilastik.sh",
+            "ilastik_classifiers_path": "path/to/ilastik/classifiers",
+
+            "cell_profiler_application_path": "path/to/Cell_Profiler/cp",
+            "cell_profiler_pipelines_path": "path/to/cell_profiler/pipelines",
+
+            "input_channels": {"mCherry": "561TMRE", "Cy5": "640PKMO"},
+
+            "pipeline": {
+                "separateChannels": {
+                    "params": {
+                        "skip": false
+                    }
+                },
+                "runIlastikClassifier": {
+                    "params": {
+                        "skip": false
+                    }
+                },
+                "runCellProfilerPipeline": {
+                    "params": {
+                        "skip": false
+                    }
+                }
+            }
+        }
+        ```
+    7. (Optional) Validate your settings with a JSON validation like <a href="https://jsonlint.com/" target="_blank">JSON Lint</a>.
+    These JSON validators will parse through your JSON and make sure everything is formatted correctly, and are very useful when trying to find bugs!
+
+3. <a id="instructions-run"></a>Run your pipeline!<br>
+Finally, you are ready to run your pipeline! I recommend starting with a small dataset of one or a few images with your first attempt to ensure things run properly. Once you confirm that everything is coming out how you expected you can point the pipeline at new datasets and start automatically processing your data!<br>
+    - To run your program locally go to the directory with your run script and enter the command:
+        ```
+        local-run.sh /path/to/settings_file.json
+        ```
+        The components of this command are:
+        - `local-run.sh`: our job run script.
+        - `/path/to/settings_file.json`: the absolute path to the settings file you want to use for this run.
+
+    - To run your program on the Euler go to the directory with your run script and enter the command 
+        ```
+        sbatch --ntasks=1 --cpus-per-task=8 --time=4:00:00 --job-name=pipeline --mem-per-cpu=1024 euler-run.sh /path/to/settings_file.json
+        ``` 
+        The components of this command are:
+        - `sbatch`: sends this command to Euler's sbatch system, don't change this
+        - `--ntasks`: defines the number of tasks to run. We set it to run but your use case may require more.
+        - `--cpus-per-task`: the number of CPUs dedicated to each task. Increase this for more expensive processes.
+        - `--time`: the maximum time your script is allowed to run for before cancelling
+        - `--job-name`: the name of the job. Adding an identifiable name to each job can make it easier to manipulate them later when multiple are running
+        - `--mem-per-cpu`: the amount of memory per CPU, in MB.
+        - `euler-run.sh`: our euler run script.
+        - `/path/to/settings_file.json`: the absolute path to the settings file you want to use for this run.
+
+## <a id="toimprove"></a> Known Shortcomings
+
+While we were able to get a pipeline working to quantify neuronal mitochondria, there is absolutely still more work that needs to be done to make this tool more versatile to be acceptable for everyday use in the lab. This section lists some known shortcomings with the tool in the hope that it may be improved in the future.
+- <strong>The output folder needs to be a subfolder of the input folder</strong>. This should be changed so people can put their output wherever they want, however, the system can't handle this yet when steps in a pipeline depend on previous step(s)
+The way different pipeline steps handle input folders is hardcoded differently and should be improved. For example, some steps take the output of the previous step as input (runIlastikClassifier), while others take just the root input (runCellProfilerPipeline). If a pipeline were to be Ilastik -> CP with an output folder not a subfolder of the input folder, Cell Profiler would have no access to the Ilastik output.
+- <strong>The channel naming scheme in the settings is confusing</strong>. Somehow the user needs to tell the system the channels of their multichannel images so it can use this to identify them uniquely if separated. The current method, while functional, seems confusing and very prone to user error.
+    - One way to address this could be doing automatic channel detection from image metadata, the tifffile Python library used in the separateChannels step is supposed to be able to read metadata.
+- <strong>The flag options for headless running are implemented in Ilastik but not CP or Fiji</strong>. Because we got Ilastik working much sooner, the flag system is much more developed. This could be extended to work with CP/Fiji, however, we didn't have time to test this so it has not been done.
+- <strong>Local execution is untested on Windows.</strong>
